@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Shop {
+  id           String        @id @default(uuid()) @db.Uuid
+  shopName     String        @unique @db.VarChar(255)
+  location     String        @map("location") @db.VarChar(255)
+  admins       Admin[]
+  users        User[]
+  stocks       Stock[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("shops")
+}
+
+model Admin {
+  id           String        @id @default(uuid()) @db.Uuid
+  shopId       String        @map("shop_id") @db.Uuid
+  shop         Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  username     String        @unique @db.VarChar(100)
+  passwordHash String        @map("password_hash") @db.VarChar(255)
+  fullName     String        @map("full_name") @db.VarChar(255)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("admins")
+}
+
+model User {
+  id               String        @id @default(uuid()) @db.Uuid
+  rationCardNumber String        @unique @map("ration_card_number") @db.VarChar(50)
+  name             String        @db.VarChar(255)
+  email            String        @db.VarChar(255)
+  shopId           String        @map("shop_id") @db.Uuid
+  shop             Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  riceQuota        Int           @default(20) @map("rice_quota")
+  wheatQuota       Int           @default(10) @map("wheat_quota")
+  sugarQuota       Int           @default(5) @map("sugar_quota")
+  keroseneQuota    Int           @default(3) @map("kerosene_quota")
+  riceConsumed     Int           @default(0) @map("rice_consumed")
+  wheatConsumed    Int           @default(0) @map("wheat_consumed")
+  sugarConsumed    Int           @default(0) @map("sugar_consumed")
+  keroseneConsumed Int           @default(0) @map("kerosene_consumed")
+  lastResetMonth   Int?          @map("last_reset_month")
+  transactions     Transaction[]
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("users")
+}
+
+enum ProductName {
+  RICE
+  WHEAT
+  SUGAR
+  KEROSENE
+
+  @@map("product_name")
+}
+
+model Stock {
+  id                String      @id @default(uuid()) @db.Uuid
+  shopId            String      @map("shop_id") @db.Uuid
+  shop              Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  productName       ProductName @map("product_name")
+  quantityAvailable Decimal     @map("quantity_available") @db.Decimal(10, 2)
+  unit              String      @db.VarChar(20)
+  updatedAt         DateTime    @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([shopId, productName])
+  @@map("stocks")
+}
+
+model Transaction {
+  id              String      @id @default(uuid()) @db.Uuid
+  userId          String      @map("user_id") @db.Uuid
+  shopId          String      @map("shop_id") @db.Uuid
+  adminId         String      @map("admin_id") @db.Uuid
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shop            Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  admin           Admin       @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  productName     ProductName @map("product_name")
+  quantity        Decimal     @db.Decimal(10, 2)
+  unit            String      @db.VarChar(20)
+  transactionDate DateTime    @default(now()) @map("transaction_date") @db.Timestamptz
+
+  @@index([userId])
+  @@index([shopId])
+  @@index([transactionDate])
+  @@map("transactions")
+}
