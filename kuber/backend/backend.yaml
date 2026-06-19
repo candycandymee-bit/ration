@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ration-backend
-          image: candycandymee/ration-backend:v2
+          image: candycandymee/ration-backend:v3
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
