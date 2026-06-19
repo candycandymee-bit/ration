@@ -20,6 +20,9 @@ spec:
             - containerPort: 3000
 
           env:
+            - name: PORT
+              value: "3000"
+
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -37,3 +40,9 @@ spec:
                 secretKeyRef:
                   name: ration-secret
                   key: CORS_ORIGIN
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
