@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: postgres-storage
+  storageClassName: postgres-storage   # FIXED
   resources:
     requests:
       storage: 3Gi

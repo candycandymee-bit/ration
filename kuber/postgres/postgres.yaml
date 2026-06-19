@@ -17,22 +17,27 @@ spec:
           image: postgres:17
           ports:
             - containerPort: 5432
+
           env:
             - name: POSTGRES_DB
               value: rationdb
+
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: ration-secret
                   key: POSTGRES_USER
+
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: ration-secret
                   key: POSTGRES_PASSWORD
+
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:

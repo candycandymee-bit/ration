@@ -1,6 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: 
+metadata:
   name: ration-frontend
 spec:
   replicas: 1
@@ -18,9 +18,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-          env:
-            - name: VITE_API_URL
-              valueFrom:
-                secretKeyRef:
-                  name: ration-secret
-                  key: VITE_API_URL

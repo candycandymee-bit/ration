@@ -6,12 +6,12 @@ spec:
   ingressClassName: nginx
   rules:
     - host: rationtrack.local
-      http: 
+      http:
         paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: ration-frontend-service
-              port:
-                number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ration-frontend-service
+                port:
+                  number: 80
