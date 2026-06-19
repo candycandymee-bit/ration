@@ -14,4 +14,4 @@ spec:
               service:
                 name: ration-frontend-service
                 port:
-                  number: 80
+                  number: 5173

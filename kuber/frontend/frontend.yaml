@@ -17,4 +17,4 @@ spec:
           image: candycandymee/ration-frontend:v1
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 5173
