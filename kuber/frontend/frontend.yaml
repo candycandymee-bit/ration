@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ration-frontend
-          image: candycandymee/ration-frontend:v1
+          image: candycandymee/ration-frontend:v2
           imagePullPolicy: Always
           ports:
             - containerPort: 5173
