@@ -30,6 +30,11 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/system', systemRoutes);
 
+// Root redirect to health check
+app.get('/', (req, res) => {
+  res.redirect('/api/health');
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
